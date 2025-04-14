@@ -5,6 +5,47 @@ include('include/conn.php');
 include('include/session.php')
 ?>
 
+<?php
+// ADD Category
+if (isset($_POST["add_category"])) {
+	$name = mysqli_escape_string($conn, $_POST["name"]);
+	$createBy = $username;
+	$add_category = mysqli_query($conn, ("INSERT INTO category(name,createBy,createTime) VALUES('$name','$createBy','$date')"));
+	if ($add_category) {
+		header("location:category.php?SuccessAddCategory");
+	} else {
+		$message = 'Something wrong!';
+	}
+}
+
+//  EDIT Category
+
+if (isset($_POST["edit_category"])) {
+	$edit_id = mysqli_escape_string($conn, $_POST["edit_id"]);
+	$edit_name = mysqli_escape_string($conn, $_POST["edit_name"]);
+	$updateBy = $username;
+	$edit_category = mysqli_query($conn, ("UPDATE category SET name='$edit_name', updateBy ='$updateBy', lastUpdate='$date' WHERE id = '$edit_id'"));
+	if ($edit_category) {
+		header("location:category.php?SuccessEditCategory");
+	} else {
+		$message = 'Something wrong!';
+	}
+}
+
+//  DELETE Category
+
+if (isset($_POST["delete_category"])) {
+	$delete_id = mysqli_escape_string($conn, $_POST["delete_id"]);
+	$delete_category = mysqli_query($conn, ("DELETE FROM category WHERE id = '$delete_id'"));
+	if ($delete_category) {
+		header("location:category.php?SuccessDeleteCategory");
+	} else {
+		$message = 'Something wrong!';
+	}
+}
+
+?>
+
 <?php include('include/head.php') ?>
 
 <body>
@@ -136,12 +177,12 @@ include('include/session.php')
 													<td><a href="" class="product-list-item-img"><img src="assets/img/product-list-img.jpg" alt="product-list"><span><?php echo $res["name"] ?></span></a></td>
 													<td><?php echo $product["totalcategory"] ?></td>
 													<td class="d-flex align-items-center">
-														<a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category"><i class="fe fe-edit"></i></a>
-														<a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal"><i class="fe fe-trash-2"></i></a>
+														<a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category_<?php echo $res["id"] ?>"><i class="fe fe-edit"></i></a>
+														<a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal_<?php echo $res["id"] ?>"><i class="fe fe-trash-2"></i></a>
 													</td>
 												</tr>
-												<!-- Add Category Modal -->
-												<div class="modal custom-modal fade" id="edit_category" role="dialog">
+												<!-- Edit Category Modal -->
+												<div class="modal custom-modal fade" id="edit_category_<?php echo $res["id"] ?>" role="dialog">
 													<div class="modal-dialog modal-dialog-centered modal-md">
 														<div class="modal-content">
 															<div class="modal-header border-0 pb-0">
@@ -152,7 +193,8 @@ include('include/session.php')
 
 																</button>
 															</div>
-															<form action="#">
+															<form action="" method="post">
+																<input type="hidden" name="edit_id" class="form-control" value="<?php echo $res["id"] ?>">
 																<div class="modal-body">
 																	<div class="row">
 																		<div class="col-md-12">
@@ -162,15 +204,15 @@ include('include/session.php')
 																						<div class="col-lg-12 col-sm-12">
 																							<div class="input-block mb-3">
 																								<label>Name <span class="text-danger">*</span></label>
-																								<input type="text" class="form-control" value="Advertising" placeholder="Enter Title">
+																								<input type="text" class="form-control" name="edit_name" value="<?php echo $res["name"] ?>" placeholder="Enter Title">
 																							</div>
 																						</div>
-																						<div class="col-lg-12 col-sm-12">
+																						<!-- <div class="col-lg-12 col-sm-12">
 																							<div class="input-block mb-3">
 																								<label>Slug</label>
 																								<input type="text" class="form-control" value="advertising" placeholder="Enter Slug">
 																							</div>
-																						</div>
+																						</div> -->
 																						<div class="col-lg-12 col-sm-12">
 																							<div class="input-block mb-3">
 																								<label>Parent Category</label>
@@ -204,16 +246,16 @@ include('include/session.php')
 																</div>
 																<div class="modal-footer">
 																	<button type="button" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn me-2">Cancel</button>
-																	<button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Update</button>
+																	<button type="submit" data-bs-dismiss="modal" name="edit_category" class="btn btn-primary paid-continue-btn">Update</button>
 																</div>
 															</form>
 														</div>
 													</div>
 												</div>
-												<!-- /Add Vendor Modal -->
+												<!-- /Edit Vendor Modal -->
 
 												<!-- Delete Items Modal -->
-												<div class="modal custom-modal fade" id="delete_modal" role="dialog">
+												<div class="modal custom-modal fade" id="delete_modal_<?php echo $res["id"] ?>" role="dialog">
 													<div class="modal-dialog modal-dialog-centered modal-md">
 														<div class="modal-content">
 															<div class="modal-body">
@@ -221,16 +263,19 @@ include('include/session.php')
 																	<h3>Delete Category</h3>
 																	<p>Are you sure want to delete?</p>
 																</div>
-																<div class="modal-btn delete-action">
-																	<div class="row">
-																		<div class="col-6">
-																			<button type="reset" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
-																		</div>
-																		<div class="col-6">
-																			<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+																<form action="" method="post">
+																	<input type="hidden" name="delete_id" class="form-control" value="<?php echo $res["id"] ?>">
+																	<div class="modal-btn delete-action">
+																		<div class="row">
+																			<div class="col-6">
+																				<button type="submit" name="delete_category" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+																			</div>
+																			<div class="col-6">
+																				<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
+																			</div>
 																		</div>
 																	</div>
-																</div>
+																</form>
 															</div>
 														</div>
 													</div>
@@ -365,7 +410,7 @@ include('include/session.php')
 
 						</button>
 					</div>
-					<form action="#">
+					<form action="#" method="post">
 						<div class="modal-body">
 							<div class="row">
 								<div class="col-md-12">
@@ -375,15 +420,15 @@ include('include/session.php')
 												<div class="col-lg-12 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Name <span class="text-danger">*</span></label>
-														<input type="text" class="form-control" placeholder="Enter Title">
+														<input type="text" name="name" class="form-control" placeholder="Enter Title">
 													</div>
 												</div>
-												<div class="col-lg-12 col-sm-12">
+												<!-- <div class="col-lg-12 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Slug</label>
 														<input type="text" class="form-control" placeholder="Enter Slug">
 													</div>
-												</div>
+												</div> -->
 												<div class="col-lg-12 col-sm-12">
 													<div class="input-block mb-3">
 														<label>Parent Category</label>
@@ -417,7 +462,7 @@ include('include/session.php')
 						</div>
 						<div class="modal-footer">
 							<button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
-							<button type="submit" data-bs-dismiss="modal" class="btn btn-primary paid-continue-btn">Add Category</button>
+							<button type="submit" data-bs-dismiss="modal" name="add_category" class="btn btn-primary paid-continue-btn">Add Category</button>
 						</div>
 					</form>
 				</div>
