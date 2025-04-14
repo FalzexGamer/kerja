@@ -12,11 +12,10 @@ if (isset($_POST['login'])) {
 	if (mysqli_num_rows($login) > 0) {
 		$data = mysqli_fetch_assoc($login);
 		$_SESSION["username"] = $data["username"];
-		$_SESSION["is_signin"] = true;
 
 		header("location:users.php");
 	} else {
-		$login_message = "Not Registered";
+		$message = "The username or password that you've entered is incorrect.";
 	}
 }
 ?>
@@ -88,7 +87,11 @@ if (isset($_POST['login'])) {
 						<div class="login-right-wrap">
 							<h1>Login</h1>
 							<p class="account-subtitle">Access to our dashboard</p>
-
+							<?php
+							if (isset($message)) {
+							?>
+								<p class="text-light bg-danger p-2 rounded"><?php echo $message ?></p>
+							<?php } ?>
 							<form action="" method="post">
 								<div class="input-block mb-3">
 									<label class="form-control-label">Username</label>
