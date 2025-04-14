@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 
+<?php
+include('include/conn.php');
+include('include/session.php')
+?>
 
-<?php include('include/conn.php') ?>
 <?php
 
 // ADD USER
