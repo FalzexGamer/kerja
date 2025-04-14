@@ -164,9 +164,11 @@ if (isset($_POST["delete_uom"])) {
 										</thead>
 										<tbody>
 											<?php
+											// View UOM
 											$show_uom = mysqli_query($conn, "SELECT * FROM uom");
 											while ($res = mysqli_fetch_assoc($show_uom)) {
 												$uom_name = $res["name"];
+												// Count UOM
 												$sum_uom = mysqli_query($conn, "SELECT count(uom_id) as total_uom FROM products WHERE uom_id='$uom_name'");
 												$product = mysqli_fetch_array($sum_uom)
 											?>
