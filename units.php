@@ -158,17 +158,24 @@ if (isset($_POST["delete_uom"])) {
 												<th>#</th>
 												<th>Unit Name</th>
 												<th>Short Name</th>
+												<th>Total Product</th>
 												<th class="no-sort">Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
 											$show_uom = mysqli_query($conn, "SELECT * FROM uom");
-											while ($res = mysqli_fetch_assoc($show_uom)) { ?>
+											while ($res = mysqli_fetch_assoc($show_uom)) {
+												$uom_name = $res["name"];
+												$sum_uom = mysqli_query($conn, "SELECT count(uom_id) as total_uom FROM products WHERE uom_id='$uom_name'");
+												$product = mysqli_fetch_array($sum_uom)
+											?>
+
 												<tr>
 													<td><?php echo $res["id"] ?></td>
 													<td><?php echo $res["name"] ?></td>
 													<td><?php echo $res["shortname"] ?></td>
+													<td><?php echo $product["total_uom"] ?></td>
 													<td class="d-flex align-items-center">
 														<a class="btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_unit_<?php echo $res["id"] ?>"><i class="fe fe-edit"></i></a>
 														<a class="btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal_<?php echo $res["id"] ?>"><i class="fe fe-trash-2"></i></a>
