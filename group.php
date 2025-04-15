@@ -6,39 +6,39 @@ include('include/session.php')
 ?>
 
 <?php
-// ADD Category
-if (isset($_POST["add_category"])) {
+// ADD Group
+if (isset($_POST["add_group"])) {
 	$name = mysqli_escape_string($conn, $_POST["name"]);
 	$createBy = $username;
-	$add_category = mysqli_query($conn, ("INSERT INTO category(name,createBy,createTime) VALUES('$name','$createBy','$date')"));
-	if ($add_category) {
-		header("location:category.php?SuccessAddCategory");
+	$add_group = mysqli_query($conn, ("INSERT INTO group_desc(name,createBy,createTime) VALUES('$name','$createBy','$date')"));
+	if ($add_group) {
+		header("location:group.php?SuccessAddgroup");
 	} else {
 		$message = 'Something wrong!';
 	}
 }
 
-//  EDIT Category
+//  EDIT Group
 
-if (isset($_POST["edit_category"])) {
+if (isset($_POST["edit_group"])) {
 	$edit_id = mysqli_escape_string($conn, $_POST["edit_id"]);
 	$edit_name = mysqli_escape_string($conn, $_POST["edit_name"]);
 	$updateBy = $username;
-	$edit_category = mysqli_query($conn, ("UPDATE category SET name='$edit_name', updateBy ='$updateBy', lastUpdate='$date' WHERE id = '$edit_id'"));
-	if ($edit_category) {
-		header("location:category.php?SuccessEditCategory");
+	$edit_group = mysqli_query($conn, ("UPDATE group_desc SET name='$edit_name', updateBy ='$updateBy', lastUpdate='$date' WHERE id = '$edit_id'"));
+	if ($edit_group) {
+		header("location:group.php?SuccessEditgroup");
 	} else {
 		$message = 'Something wrong!';
 	}
 }
 
-//  DELETE Category
+//  DELETE Group
 
-if (isset($_POST["delete_category"])) {
+if (isset($_POST["delete_group"])) {
 	$delete_id = mysqli_escape_string($conn, $_POST["delete_id"]);
-	$delete_category = mysqli_query($conn, ("DELETE FROM category WHERE id = '$delete_id'"));
-	if ($delete_category) {
-		header("location:category.php?SuccessDeleteCategory");
+	$delete_group = mysqli_query($conn, ("DELETE FROM group_desc WHERE id = '$delete_id'"));
+	if ($delete_group) {
+		header("location:group.php?SuccessDeletegroup");
 	} else {
 		$message = 'Something wrong!';
 	}
@@ -69,7 +69,7 @@ if (isset($_POST["delete_category"])) {
 				<!-- Page Header -->
 				<div class="page-header">
 					<div class="content-page-header ">
-						<h5>Category </h5>
+						<h5>Group </h5>
 						<div class="list-btn">
 							<ul class="filter-list">
 								<li>
@@ -94,7 +94,7 @@ if (isset($_POST["delete_category"])) {
 									<a class="btn-filters" href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="Print"><span><i class="fe fe-printer"></i></span> </a>
 								</li>
 								<li>
-									<a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_category"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add Category</a>
+									<a class="btn btn-primary" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#add_group"><i class="fa fa-plus-circle me-2" aria-hidden="true"></i>Add group</a>
 								</li>
 							</ul>
 						</div>
@@ -137,9 +137,9 @@ if (isset($_POST["delete_category"])) {
 								<div class="invoices-tabs">
 									<ul>
 										<li><a href="product-list.php">Product</a></li>
-										<li><a href="category.php" class="active">Category</a></li>
+										<li><a href="category.php">Category</a></li>
 										<li><a href="units.php">Units</a></li>
-										<li><a href="group.php">Group</a></li>
+										<li><a href="group.php" class="active">Group</a></li>
 									</ul>
 								</div>
 							</div>
@@ -158,37 +158,37 @@ if (isset($_POST["delete_category"])) {
 										<thead class="thead-light">
 											<tr>
 												<th>#</th>
-												<th>Category Name</th>
+												<th>Group Name</th>
 												<th>Total Products</th>
 												<th class="no-sort">Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
-											// View Category
-											$show_category = mysqli_query($conn, "SELECT * FROM category");
-											while ($res = mysqli_fetch_assoc($show_category)) {
-												$product_name = $res["name"];
-												// Count Category
-												$sum_product = mysqli_query($conn, "SELECT count(category) as totalcategory FROM products WHERE category='$product_name'");
-												$product = mysqli_fetch_array($sum_product)
+											// View group
+											$show_group = mysqli_query($conn, "SELECT * FROM group_desc");
+											while ($res = mysqli_fetch_assoc($show_group)) {
+												$group_name = $res["name"];
+												// Count group
+												$sum_group = mysqli_query($conn, "SELECT count(group_desc) as totalgroup FROM products WHERE group_desc='$group_name'");
+												$group = mysqli_fetch_array($sum_group)
 											?>
 												<tr>
 													<td><?php echo $res["id"] ?></td>
 													<td><a href="" class="product-list-item-img"><img src="assets/img/product-list-img.jpg" alt="product-list"><span><?php echo $res["name"] ?></span></a></td>
-													<td><?php echo $product["totalcategory"] ?></td>
+													<td><?php echo $group["totalgroup"] ?></td>
 													<td class="d-flex align-items-center">
-														<a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_category_<?php echo $res["id"] ?>"><i class="fe fe-edit"></i></a>
+														<a class=" btn-action-icon me-2" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#edit_group_<?php echo $res["id"] ?>"><i class="fe fe-edit"></i></a>
 														<a class=" btn-action-icon" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete_modal_<?php echo $res["id"] ?>"><i class="fe fe-trash-2"></i></a>
 													</td>
 												</tr>
-												<!-- Edit Category Modal -->
-												<div class="modal custom-modal fade" id="edit_category_<?php echo $res["id"] ?>" role="dialog">
+												<!-- Edit group Modal -->
+												<div class="modal custom-modal fade" id="edit_group_<?php echo $res["id"] ?>" role="dialog">
 													<div class="modal-dialog modal-dialog-centered modal-md">
 														<div class="modal-content">
 															<div class="modal-header border-0 pb-0">
 																<div class="form-header modal-header-title text-start mb-0">
-																	<h4 class="mb-0">Edit Category</h4>
+																	<h4 class="mb-0">Edit group</h4>
 																</div>
 																<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
@@ -216,7 +216,7 @@ if (isset($_POST["delete_category"])) {
 																						</div> -->
 																						<div class="col-lg-12 col-sm-12">
 																							<div class="input-block mb-3">
-																								<label>Parent Category</label>
+																								<label>Parent group</label>
 																								<select class="select">
 																									<option>None</option>
 																									<option>Coupons</option>
@@ -247,7 +247,7 @@ if (isset($_POST["delete_category"])) {
 																</div>
 																<div class="modal-footer">
 																	<button type="button" data-bs-dismiss="modal" class="btn btn-primary paid-cancel-btn me-2">Cancel</button>
-																	<button type="submit" data-bs-dismiss="modal" name="edit_category" class="btn btn-primary paid-continue-btn">Update</button>
+																	<button type="submit" data-bs-dismiss="modal" name="edit_group" class="btn btn-primary paid-continue-btn">Update</button>
 																</div>
 															</form>
 														</div>
@@ -261,7 +261,7 @@ if (isset($_POST["delete_category"])) {
 														<div class="modal-content">
 															<div class="modal-body">
 																<div class="form-header">
-																	<h3>Delete Category</h3>
+																	<h3>Delete group</h3>
 																	<p>Are you sure want to delete?</p>
 																</div>
 																<form action="" method="post">
@@ -269,7 +269,7 @@ if (isset($_POST["delete_category"])) {
 																	<div class="modal-btn delete-action">
 																		<div class="row">
 																			<div class="col-6">
-																				<button type="submit" name="delete_category" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
+																				<button type="submit" name="delete_group" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-continue-btn">Delete</button>
 																			</div>
 																			<div class="col-6">
 																				<button type="submit" data-bs-dismiss="modal" class="w-100 btn btn-primary paid-cancel-btn">Cancel</button>
@@ -310,7 +310,7 @@ if (isset($_POST["delete_category"])) {
 							<div class="card-header-new" id="headingOne">
 								<h6 class="filter-title">
 									<a href="javascript:void(0);" class="w-100" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-										Category Name
+										group Name
 										<span class="float-end"><i class="fa-solid fa-chevron-down"></i></span>
 									</a>
 								</h6>
@@ -399,13 +399,13 @@ if (isset($_POST["delete_category"])) {
 		</div>
 		<!-- /Add Asset -->
 
-		<!-- Add Category Modal -->
-		<div class="modal custom-modal fade" id="add_category" role="dialog">
+		<!-- Add group Modal -->
+		<div class="modal custom-modal fade" id="add_group" role="dialog">
 			<div class="modal-dialog modal-dialog-centered modal-md">
 				<div class="modal-content">
 					<div class="modal-header border-0 pb-0">
 						<div class="form-header modal-header-title text-start mb-0">
-							<h4 class="mb-0">Add Category</h4>
+							<h4 class="mb-0">Add group</h4>
 						</div>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 
@@ -432,7 +432,7 @@ if (isset($_POST["delete_category"])) {
 												</div> -->
 												<div class="col-lg-12 col-sm-12">
 													<div class="input-block mb-3">
-														<label>Parent Category</label>
+														<label>Parent group</label>
 														<select class="select">
 															<option>None</option>
 															<option>Coupons</option>
@@ -463,13 +463,13 @@ if (isset($_POST["delete_category"])) {
 						</div>
 						<div class="modal-footer">
 							<button type="button" data-bs-dismiss="modal" class="btn btn-back cancel-btn me-2">Cancel</button>
-							<button type="submit" data-bs-dismiss="modal" name="add_category" class="btn btn-primary paid-continue-btn">Add Category</button>
+							<button type="submit" data-bs-dismiss="modal" name="add_group" class="btn btn-primary paid-continue-btn">Add group</button>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
-		<!-- /Add Category Modal -->
+		<!-- /Add group Modal -->
 
 
 
